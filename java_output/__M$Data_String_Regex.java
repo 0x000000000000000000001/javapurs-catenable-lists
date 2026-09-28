@@ -121,7 +121,16 @@ public class __M$Data_String_Regex {
             boolean zeroWidthMatch = matcher.find() && matcher.start() == 0 && matcher.end() == 0;
             return zeroWidthMatch ? new Object[0] : new Object[]{""};
         }
-        return p.split(str, -1);
+        Object[] parts = p.split(str, -1);
+        // JavaScript drops the trailing empty piece produced by a zero-width
+        // match at the end ("abc".split(//) is ["a","b","c"]).
+        if (parts.length > 1 && parts[parts.length - 1].equals("")) {
+            java.util.regex.Matcher endMatcher = p.matcher(str);
+            if (endMatcher.find(str.length()) && endMatcher.start() == str.length() && endMatcher.end() == str.length()) {
+                parts = java.util.Arrays.copyOf(parts, parts.length - 1);
+            }
+        }
+        return parts;
     };
 
 

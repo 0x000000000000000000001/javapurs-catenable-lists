@@ -25,16 +25,21 @@ public class __M$Effect_Exception {
         };
 
     public static Object errorWithName = (java.util.function.Function<Object, Object>) (msg) ->
-        (java.util.function.Function<Object, Object>) (name) -> {
-            RuntimeException err = new RuntimeException((String) msg) {
-                @Override public String toString() { return ((String) name) + ": " + getMessage(); }
-            };
-            return err;
-        };
+        (java.util.function.Function<Object, Object>) (name) ->
+            new NamedError((String) msg, (String) name);
+
+    public static class NamedError extends RuntimeException {
+        private final String errorName;
+        public NamedError(String message, String name) { super(message); errorName = name; }
+        public String errorName() { return errorName; }
+    }
 
     public static Object message = (java.util.function.Function<Object, Object>) (err) -> ((Throwable) err).getMessage();
 
-    public static Object name = (java.util.function.Function<Object, Object>) (err) -> ((Throwable) err).getClass().getSimpleName();
+    public static Object name = (java.util.function.Function<Object, Object>) (err) ->
+        err instanceof NamedError
+            ? ((NamedError) err).errorName()
+            : ((Throwable) err).getClass().getSimpleName();
 
     // stackImpl(just)(nothing)(err): JavaScript exposes a .stack string when
     // present; a Java Throwable always has one.
