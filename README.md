@@ -1,5 +1,9 @@
 # purescript-catenable-lists
 
+Java port of the PureScript `catenable-lists` package. See the
+[port maintenance guide](../javapurs/docs/port-maintenance.md)
+for source layout, local dependency selection and JVM validation.
+
 ## JVM tests
 
 `./bin/test` selects `catenable-lists` in the [common isolated runner](../javapurs/docs/testing.md#port-particulier), preserving this checkout and its outputs.
